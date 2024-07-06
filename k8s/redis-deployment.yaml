@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: redis-deployment 
+spec:
+  replicas: 1 
+  selector:
+    matchLabels: 
+      component: redis # deployment controller looks for pods with redis label
+  template:
+    metadata:
+      labels:
+        component: redis # this pod has a label of labels.component 
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: app-deployment 
+spec:
+  replicas: 1 
+  selector:
+    matchLabels: 
+      component: api # deployment controller looks for pods with redis label
+  template:
+    metadata:
+      labels:
+        component: api # this pod has a label of labels.component 
+    spec:
+      containers:
+        - name: api 
+          image: nnethercott/celery_flask_api
+          ports:
+            - containerPort: 5000
+          env:
+            - name: CELERY_BACKEND
+              #value: redis-cluster-ip
+              value: "redis://redis-cluster-ip-service:6379/0"
+            - name: CELERY_BROKER
+              value: "amqp://broker-cluster-ip-service:5672//"
+

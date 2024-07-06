@@ -1,0 +1,37 @@
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: celery-flask
+#   labels:
+#     component: flask
+# spec:
+#   containers:
+#     #api
+#     - name: api
+#       image: nnethercott/celery_flask_api
+#       ports:
+#         - containerPort: 5000
+#       env:
+#         - name: CELERY_BROKER
+#           value: "pyamqp://guest:guest@localhost//"
+#         - name: CELERY_BACKEND
+#           value: "redis://localhost"
+#       command: ["/bin/sh", "-c"]
+#       args: ["python run.py"]
+#
+#     #worker
+#     # - name: worker
+#     #   image: nnethercott/celery_flask_worker
+#     #   env:
+#     #     - name: CELERY_BROKER
+#     #       value: "pyamqp://guest:guest@broker//"
+#     #     - name: CELERY_BACKEND
+#     #       value: "redis://backend"
+#     #   command: ["/bin/sh", "-c"]
+#     #   args: ["sleep 35", "&&", "celery", "-A", "run.celery_app", "worker", "--loglevel=INFO"]
+#       #redis
+#     - name: backend
+#       image: redis:latest
+#     #rabbit
+#     - name: broker
+#       image: rabbitmq:latest

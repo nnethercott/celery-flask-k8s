@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 2 #INCREMENT FOR MORE WORKERS
+  selector:
+    matchLabels:
+      component: worker # deployment controller looks for pods with redis label
+  template:
+    metadata:
+      labels:
+        component: worker # this pod has a label of labels.component
+    spec:
+      containers:
+        - name: worker
+          image: nnethercott/celery_flask_worker
+          ports:
+            - containerPort: 8000
+          env:
+            - name: CELERY_BACKEND
+              #value: redis-cluster-ip
+              value: "redis://redis-cluster-ip-service:6379/0"
+            - name: CELERY_BROKER
+              value: "amqp://broker-cluster-ip-service:5672//"
+          command: ["/bin/sh", "-c"]
+          args:
+            [
+              "pip install celery[redis] && celery -A run.celery_app worker --loglevel=INFO",
+            ]

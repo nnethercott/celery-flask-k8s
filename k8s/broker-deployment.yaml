@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: broker-deployment 
+spec:
+  replicas: 1 
+  selector:
+    matchLabels: 
+      component: broker # deployment controller looks for pods with redis label
+  template:
+    metadata:
+      labels:
+        component: broker # this pod has a label of labels.component 
+    spec:
+      containers:
+        - name: broker
+          image: rabbitmq:latest
+          ports:
+            - containerPort: 5672
